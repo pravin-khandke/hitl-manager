@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Architecture — HITL-Manager 2.0</title>
+</head>
+<body>
+    <main th:fragment="main">
+        <h1>Figure 1: Collaborative HITL Feedback Loop Architecture</h1>
+        <p class="subtitle">Interactive diagram — click a component to see its description</p>
+
+        <div class="card arch-diagram" style="text-align:center; padding:2rem;">
+            <svg viewBox="0 0 900 500" style="max-width:100%; height:auto;">
+                <defs>
+                    <style>
+                        .box { fill: #1a1d23; stroke: #3b82f6; stroke-width: 2; rx: 8; }
+                        .box-alt { fill: #1f2937; stroke: #10b981; stroke-width: 2; rx: 8; }
+                        .box-support { fill: #1f2937; stroke: #f59e0b; stroke-width: 2; rx: 8; }
+                        .label { fill: #e2e4e9; font-family: -apple-system, sans-serif; font-size: 13px; text-anchor: middle; }
+                        .arrow { stroke: #6b7280; stroke-width: 2; marker-end: url(#arrowhead); }
+                        .arrow-dashed { stroke: #6b7280; stroke-width: 1.5; stroke-dasharray: 6,4; marker-end: url(#arrowhead-dashed); }
+                        .component:hover { opacity: 0.85; cursor: pointer; }
+                    </style>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+                    </marker>
+                    <marker id="arrowhead-dashed" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#6b7280"/>
+                    </marker>
+                </defs>
+
+                <!-- Experts -->
+                <g class="component">
+                    <rect x="30" y="190" width="140" height="60" class="box"/>
+                    <text x="100" y="216" class="label" font-weight="bold">Experts</text>
+                    <text x="100" y="234" class="label" font-size="11" fill="#9ca3af">Domain Experts, Analysts</text>
+                </g>
+
+                <!-- Arrow: Experts → AI Engine -->
+                <line x1="170" y1="220" x2="260" y2="220" class="arrow"/>
+
+                <!-- AI Engine -->
+                <g class="component">
+                    <rect x="265" y="190" width="150" height="60" class="box"/>
+                    <text x="340" y="216" class="label" font-weight="bold">AI Engine</text>
+                    <text x="340" y="234" class="label" font-size="11" fill="#9ca3af">Predictions, Classifications</text>
+                </g>
+
+                <!-- Arrow: AI Engine → Review -->
+                <line x1="415" y1="220" x2="505" y2="220" class="arrow"/>
+
+                <!-- Review -->
+                <g class="component">
+                    <rect x="510" y="190" width="140" height="60" class="box-alt"/>
+                    <text x="580" y="216" class="label" font-weight="bold">Review</text>
+                    <text x="580" y="234" class="label" font-size="11" fill="#9ca3af">Human Validation</text>
+                </g>
+
+                <!-- Arrow: Review → Learning -->
+                <line x1="650" y1="250" x2="580" y2="340" class="arrow"/>
+
+                <!-- Learning -->
+                <g class="component">
+                    <rect x="440" y="340" width="150" height="60" class="box-alt"/>
+                    <text x="515" y="366" class="label" font-weight="bold">Learning</text>
+                    <text x="515" y="384" class="label" font-size="11" fill="#9ca3af">Model Updates</text>
+                </g>
+
+                <!-- Arrow: Learning → AI Engine (feedback up) -->
+                <line x1="440" y1="350" x2="340" y2="250" class="arrow-dashed"/>
+
+                <!-- Feedback -->
+                <g class="component">
+                    <rect x="265" y="340" width="140" height="60" class="box-alt"/>
+                    <text x="335" y="366" class="label" font-weight="bold">Feedback</text>
+                    <text x="335" y="384" class="label" font-size="11" fill="#9ca3af">Insights, Recommendations</text>
+                </g>
+
+                <!-- Arrow: Feedback → Experts (left) -->
+                <line x1="265" y1="360" x2="100" y2="250" class="arrow-dashed"/>
+
+                <!-- Knowledge (bottom) -->
+                <g class="component">
+                    <rect x="340" y="430" width="180" height="50" class="box-support"/>
+                    <text x="430" y="452" class="label" font-weight="bold">Knowledge</text>
+                    <text x="430" y="469" class="label" font-size="11" fill="#9ca3af">History, Annotations, Training Sets</text>
+                </g>
+
+                <!-- Insights (top-right) -->
+                <g class="component">
+                    <rect x="700" y="80" width="160" height="50" class="box-support"/>
+                    <text x="780" y="102" class="label" font-weight="bold">Insights</text>
+                    <text x="780" y="119" class="label" font-size="11" fill="#9ca3af">Dashboards, Analytics</text>
+                </g>
+
+                <!-- Dashed line from Review to Insights -->
+                <line x1="650" y1="200" x2="700" y2="120" class="arrow-dashed"/>
+                <!-- Dashed line from Learning to Knowledge -->
+                <line x1="500" y1="400" x2="470" y2="430" class="arrow-dashed"/>
+            </svg>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Component Descriptions</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div><strong>Experts</strong> — Domain experts, analysts, reviewers providing judgments and contextual knowledge</div>
+                <div><strong>AI Engine</strong> — Core analysis block generating predictions from learned models and historical data</div>
+                <div><strong>Review</strong> — Human reviewers validate AI decisions, check accuracy, and correct inconsistencies</div>
+                <div><strong>Learning</strong> — Updates models, adjusts parameters, and integrates new knowledge from feedback</div>
+                <div><strong>Feedback</strong> — Reinforcement loop providing updated insights back to users and workflows</div>
+                <div><strong>Knowledge</strong> — Persistent storage of interaction histories, annotations, and validated decisions</div>
+                <div><strong>Insights</strong> — Dashboards and visualizations for monitoring performance and learning progression</div>
+                <div><strong>Solid edges</strong> — Primary workflow; <strong style="color:#6b7280;">Dashed edges</strong> — Communication and analytical feedback</div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

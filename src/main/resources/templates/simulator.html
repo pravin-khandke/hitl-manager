@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Simulator — HITL-Manager 2.0</title>
+</head>
+<body>
+    <main th:fragment="main">
+        <h1>HITL Simulator</h1>
+        <p class="subtitle">Block <span th:text="${currentBlock}">1</span> of 5 — Interactive Incident Resolution</p>
+
+        <div th:if="${complete}" class="card" style="text-align:center; padding:3rem;">
+            <h2>All 215 Incidents Processed</h2>
+            <p style="margin:1rem 0;">The simulator has completed all 5 blocks.</p>
+            <a th:href="@{/}" class="btn btn-accept">View Dashboard Results</a>
+        </div>
+
+        <div th:if="${!complete && incident != null}" class="incident-card card" th:object="${incident}">
+            <div class="card-header">
+                <span class="badge" th:classappend="'badge-' + (${incident.severity.name() == 'CRITICAL' ? 'danger' : (incident.severity.name() == 'HIGH' ? 'warning' : 'success'))"
+                      th:text="${incident.severity}">HIGH</span>
+                <span style="margin-left:0.5rem;" th:text="'#' + ${incident.id.toString().substring(0,8)}">#abc12345</span>
+                <span style="float:right; font-size:0.8rem; color:#6b7280;" th:text="${incident.type}">cpu_spike</span>
+            </div>
+            <p th:text="${incident.description}">Incident description here</p>
+            <div style="display:flex; gap:2rem; margin:1rem 0; font-size:0.85rem;">
+                <div>
+                    <strong>Resource Metrics:</strong>
+                    <span th:each="entry : ${incident.resourceMetrics}" style="margin-left:0.5rem;">
+                        <span th:text="${entry.key}">cpu</span>: <span class="mono" th:text="${#numbers.formatDecimal(entry.value, 0, 'COMMA', 1)}">85.0</span>%
+                    </span>
+                </div>
+                <div><strong>Source:</strong> <span class="mono" th:text="${incident.sourceIp}">192.168.1.1</span></div>
+                <div><strong>Ground Truth:</strong> <span th:text="${incident.groundTruth} ? 'Genuine' : 'False Positive'"
+                        th:classappend="${incident.groundTruth} ? 'badge badge-success' : 'badge badge-danger'">Genuine</span></div>
+            </div>
+        </div>
+
+        <div th:if="${!complete && suggestion != null}" class="suggestion-card card" th:object="${suggestion}">
+            <div class="card-header">AI Suggestion <span class="mono" th:text="'(model ' + ${suggestion.modelVersion} + ')'">(model 1.0.0)</span></div>
+            <div style="margin:1rem 0;">
+                <strong>Suggested Action:</strong>
+                <p th:text="${suggestion.suggestedAction}" style="margin:0.5rem 0;">Investigate CPU spike</p>
+            </div>
+            <div>
+                <strong>Confidence:</strong>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" th:style="'width:' + ${#numbers.formatDecimal(suggestion.confidenceScore * 100, 0, 'COMMA', 0)} + '%'"></div>
+                </div>
+                <span class="mono" th:text="${#numbers.formatDecimal(suggestion.confidenceScore * 100, 0, 'COMMA', 1)} + '%'">65.0%</span>
+            </div>
+            <div style="margin:0.5rem 0;">
+                <strong>Explanation:</strong>
+                <p th:text="${suggestion.explanation}" style="margin:0.25rem 0; color:#6b7280;">CPU at 85% exceeds threshold</p>
+            </div>
+
+            <form th:action="@{/simulator/act}" method="post" style="margin-top:1.5rem;">
+                <input type="hidden" name="incidentId" th:value="${incident.id}">
+                <input type="hidden" name="suggestionId" th:value="${suggestion.id}">
+                <input type="hidden" name="responseTimeMs" id="response-time-ms" value="5000">
+
+                <div class="btn-group">
+                    <button type="submit" name="decision" value="ACCEPT" class="btn btn-accept"
+                            onclick="document.getElementById('response-time-ms').value=Math.floor(Math.random()*3000)+2000">
+                        Accept</button>
+                    <button type="submit" name="decision" value="MODIFY" class="btn btn-modify"
+                            onclick="document.getElementById('response-time-ms').value=Math.floor(Math.random()*5000)+5000">
+                        Modify</button>
+                    <button type="submit" name="decision" value="REJECT" class="btn btn-reject"
+                            onclick="document.getElementById('response-time-ms').value=Math.floor(Math.random()*4000)+4000">
+                        Reject</button>
+                </div>
+                <div id="modify-field" style="display:none; margin-top:1rem;">
+                    <label>Corrected action:</label>
+                    <input type="text" name="modification" class="form-input" placeholder="Describe the correct action...">
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Dashboard — HITL-Manager 2.0</title>
+</head>
+<body>
+    <main th:fragment="main">
+        <h1>System Performance Dashboard</h1>
+        <p class="subtitle" th:if="${!allComplete}">Currently processing Block <span th:text="${currentBlock}">1</span> of 5</p>
+        <p class="subtitle badge-success" th:if="${allComplete}" style="display:inline-block;padding:0.3rem 0.8rem;">All blocks complete</p>
+
+        <!-- Table 1: KPI Blocks -->
+        <div class="card" id="block-metrics-container"
+             hx-get="/api/metrics/blocks" hx-trigger="every 3s" hx-swap="innerHTML">
+            <div th:include="fragments/metrics-table :: blockMetricsTable(${blocks})"></div>
+        </div>
+
+        <!-- Table 2: Operator Feedback by Severity -->
+        <div class="card" id="severity-container"
+             hx-get="/api/metrics/severity" hx-trigger="every 3s" hx-swap="innerHTML">
+            <div th:include="fragments/severity-table :: severityTable"></div>
+        </div>
+    </main>
+</body>
+</html>

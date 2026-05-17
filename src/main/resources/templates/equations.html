@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Equations — HITL-Manager 2.0</title>
+</head>
+<body>
+    <main th:fragment="main">
+        <h1>Research Equations with Live Values</h1>
+        <p class="subtitle">Equations (1)–(6) from the research paper</p>
+
+        <div class="card">
+            <div class="equation-block">
+                <div class="card-header">Equation (1): Human-AI Collaborative System Accuracy</div>
+                \[\text{Acc}_{\text{sys}} = \sum_{i=1}^{n} \alpha \cdot P(A_i|S_i) + (1-\alpha) \cdot P(H_i|S_i,R_i)\]
+                <div class="equation-value" id="eq1-value">Loading...</div>
+            </div>
+
+            <div class="equation-block">
+                <div class="card-header">Equation (2): Dynamic Operator Confidence Threshold Modulation</div>
+                \[\theta(t) = \theta_0 + \int_{0}^{t} Lf(x;\theta)dt - \lambda \cdot \mathbb{E}[FP_r]\]
+                <div class="equation-value" id="eq2-value">Loading...</div>
+            </div>
+
+            <div class="equation-block">
+                <div class="card-header">Equation (3): Cognitive Load Index for Multi-Modal Operator Interfaces</div>
+                \[\text{load} = \sum_{k=1}^{m} \frac{D_k}{R_k C_k - I_k} + \frac{T_{\text{response}}}{T_{\text{baseline}}}\]
+                <div class="equation-value" id="eq3-value">Loading...</div>
+            </div>
+
+            <div class="equation-block">
+                <div class="card-header">Equation (4): Recursive Model Refinement via Continuous Human Feedback</div>
+                \[\theta_{t+1} = \theta_t - \eta \mathcal{L}(f(x;\theta),y) + \gamma \cdot \text{sgn}(H_{\text{feedback}} - A_{\text{suggest}})\]
+                <div class="equation-value" id="eq4-value">Loading...</div>
+            </div>
+
+            <div class="equation-block">
+                <div class="card-header">Equation (5): Incident Resolution Efficiency and Resource Allocation Optimization</div>
+                \[\text{eff} = \sum_{j=1}^{N} \frac{1 - T_{\text{resolution},j}}{\sum T_{\text{manual}}} \exp(-FP_{\text{rate}})\]
+                <div class="equation-value" id="eq5-value">Loading...</div>
+            </div>
+
+            <div class="equation-block">
+                <div class="card-header">Equation (6): Human-in-the-Loop Trust Calibration State Space</div>
+                \[\frac{dT}{dt} = \kappa \cdot \text{Fail}_{AI} - \delta \cdot T(t) + \zeta \cdot \text{Explain}_{\text{clarity}}\]
+                <div class="equation-value" id="eq6-value">Loading...</div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            // Update equation values via HTMX polling
+            setInterval(async () => {
+                const resp = await fetch('/api/metrics/equations');
+                const data = await resp.json();
+                for (let i = 1; i <= 6; i++) {
+                    const el = document.getElementById('eq' + i + '-value');
+                    if (el) {
+                        const key = 'equation' + i;
+                        const val = data[key] || data[key + '_system_accuracy'] || data[key + '_confidence_threshold']
+                                || data[key + '_cognitive_load'] || data[key + '_model_refinement']
+                                || data[key + '_resolution_efficiency'] || data[key + '_trust_calibration'] || 0;
+                        el.textContent = 'Live value: ' + (typeof val === 'number' ? val.toFixed(4) : val);
+                    }
+                }
+            }, 5000);
+        </script>
+    </main>
+</body>
+</html>

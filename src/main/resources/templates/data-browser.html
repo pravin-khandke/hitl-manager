@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Data Browser — HITL-Manager 2.0</title>
+</head>
+<body>
+    <main th:fragment="main">
+        <h1>Data Browser — 215 Incidents</h1>
+        <p class="subtitle">Browse and filter the full incident dataset</p>
+
+        <div class="card">
+            <div style="display:flex; gap:1rem; margin-bottom:1rem;">
+                <select id="block-filter" name="block" hx-get="/api/incidents" hx-target="#incident-list"
+                        hx-include="[name='severity'],[name='page']">
+                    <option value="">All Blocks</option>
+                    <option value="1">Block 1 (1-43)</option>
+                    <option value="2">Block 2 (44-86)</option>
+                    <option value="3">Block 3 (87-129)</option>
+                    <option value="4">Block 4 (130-172)</option>
+                    <option value="5">Block 5 (173-215)</option>
+                </select>
+                <select id="severity-filter" name="severity" hx-get="/api/incidents" hx-target="#incident-list"
+                        hx-include="[name='block'],[name='page']">
+                    <option value="">All Severities</option>
+                    <option value="CRITICAL">Critical</option>
+                    <option value="HIGH">High</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="LOW">Low</option>
+                    <option value="INFORMATIONAL">Informational</option>
+                </select>
+            </div>
+
+            <div id="incident-list" hx-get="/api/incidents" hx-trigger="load" hx-swap="innerHTML">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Block</th>
+                                <th>Severity</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Ground Truth</th>
+                                <th>Processed</th>
+                            </tr>
+                        </thead>
+                        <tbody id="incident-table-body">
+                            <tr><td colspan="7" style="text-align:center; padding:2rem;">Loading incidents...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pagination">
+                    <span>Page 1 of 11</span>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

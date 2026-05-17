@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Charts — HITL-Manager 2.0</title>
+</head>
+<body>
+    <main th:fragment="main" id="charts-container"
+          hx-get="/api/charts/scatter" hx-trigger="every 5s" hx-swap="none">
+        <h1>Visualization of Results</h1>
+
+        <!-- Figure 2: Response Time vs AI Confidence -->
+        <div class="card">
+            <div class="card-header">Figure 2: Relationship Between Operator Response Time and AI Confidence</div>
+            <div class="chart-container">
+                <canvas id="scatter-chart"></canvas>
+            </div>
+            <p style="font-size:0.85rem; color:#6b7280; margin-top:0.5rem;">
+                High-confidence AI suggestions cluster at the bottom (fast validation).
+                Lower-confidence suggestions show wider response time variation as operators investigate manually.
+            </p>
+        </div>
+
+        <!-- Figure 3: Model Accuracy Mesh -->
+        <div class="card">
+            <div class="card-header">Figure 3: Model Accuracy, Operator Experience, and Feedback Volume</div>
+            <div class="chart-container">
+                <canvas id="bubble-chart"></canvas>
+            </div>
+            <p style="font-size:0.85rem; color:#6b7280; margin-top:0.5rem;">
+                System accuracy increases sharply with more feedback. The sweet spot (upper mesh) shows
+                high-quality feedback from experienced operators correlating with near-100% resolution rates.
+            </p>
+        </div>
+    </main>
+</body>
+</html>

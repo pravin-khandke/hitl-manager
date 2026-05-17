@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="blockMetricsTable(blocks)">
+        <div class="card-header">Table 1: System Performance Measures over Incident Blocks</div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Incident Block</th>
+                        <th>AI Accuracy (%)</th>
+                        <th>Human Override Rate</th>
+                        <th>False Positive Rate</th>
+                        <th>Resolution Time (Min)</th>
+                        <th>Progress</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="block : ${blocks}">
+                        <td class="mono">Block <span th:text="${block.blockNumber}">1</span>
+                            (<span th:text="${#numbers.formatDecimal((block.blockNumber - 1) * 43 + 1, 0, 'COMMA', 0)}"></span>-<span th:text="${#numbers.formatDecimal(block.blockNumber * 43, 0, 'COMMA', 0)}"></span>)</td>
+                        <td class="mono"><span th:text="${#numbers.formatDecimal(block.aiAccuracy * 100, 0, 'COMMA', 0)}">62</span>%</td>
+                        <td class="mono"><span th:text="${#numbers.formatDecimal(block.humanOverrideRate * 100, 0, 'COMMA', 0)}">38</span>%</td>
+                        <td class="mono">
+                            <span th:classappend="${block.falsePositiveRate < 0.10} ? 'badge badge-success' : (${block.falsePositiveRate < 0.20} ? 'badge badge-warning' : 'badge badge-danger')"
+                                  th:text="${#numbers.formatDecimal(block.falsePositiveRate * 100, 0, 'COMMA', 0)} + '%'">28%</span>
+                        </td>
+                        <td class="mono"><span th:text="${#numbers.formatDecimal(block.resolutionTimeMin, 0, 'COMMA', 1)}">12.0</span></td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-fill" th:style="'width:' + ${block.totalIncidents > 0 ? (block.processedCount * 100 / block.totalIncidents) : 0} + '%'"></div>
+                            </div>
+                            <small th:text="${block.processedCount} + '/' + ${block.totalIncidents}">0/43</small>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

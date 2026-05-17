@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HITL-Manager 2.0</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script th:src="@{/js/dashboard.js}" defer></script>
+</head>
+<body>
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>HITL-Manager 2.0</h2>
+            <span class="version">v2.0.0</span>
+        </div>
+        <ul class="nav-links">
+            <li><a th:href="@{/}" th:classappend="${#httpServletRequest.requestURI == '/' ? 'active' : ''}">Dashboard</a></li>
+            <li><a th:href="@{/simulator}" th:classappend="${#httpServletRequest.requestURI.startsWith('/simulator') ? 'active' : ''}">Simulator</a></li>
+            <li><a th:href="@{/architecture}" th:classappend="${#httpServletRequest.requestURI == '/architecture' ? 'active' : ''}">Architecture</a></li>
+            <li><a th:href="@{/charts}" th:classappend="${#httpServletRequest.requestURI == '/charts' ? 'active' : ''}">Charts</a></li>
+            <li><a th:href="@{/equations}" th:classappend="${#httpServletRequest.requestURI == '/equations' ? 'active' : ''}">Equations</a></li>
+            <li><a th:href="@{/data}" th:classappend="${#httpServletRequest.requestURI == '/data' ? 'active' : ''}">Data Browser</a></li>
+        </ul>
+    </nav>
+    <main class="content" th:insert="${~{::main}}">
+        <div th:fragment="main"></div>
+    </main>
+</body>
+</html>

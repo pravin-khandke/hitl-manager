@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="severityTable">
+        <div class="card-header">Table 2: Operator Feedback Distribution by Incident Severity</div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Severity Level</th>
+                        <th>Total Instances</th>
+                        <th>Corrected by Human</th>
+                        <th>Accepted as Is</th>
+                        <th>Model Update Triggered</th>
+                    </tr>
+                </thead>
+                <tbody id="severity-table-body">
+                    <tr><td>CRITICAL</td><td class="mono">45</td><td class="mono">12</td><td class="mono">33</td><td class="mono">10</td></tr>
+                    <tr><td>HIGH</td><td class="mono">50</td><td class="mono">15</td><td class="mono">35</td><td class="mono">8</td></tr>
+                    <tr><td>MEDIUM</td><td class="mono">60</td><td class="mono">18</td><td class="mono">42</td><td class="mono">12</td></tr>
+                    <tr><td>LOW</td><td class="mono">40</td><td class="mono">10</td><td class="mono">30</td><td class="mono">5</td></tr>
+                    <tr><td>INFORMATIONAL</td><td class="mono">20</td><td class="mono">2</td><td class="mono">18</td><td class="mono">2</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
